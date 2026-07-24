@@ -110,22 +110,146 @@
       Ho preparato qualcosa per te.
     </p>
 
-    <div class="day">
-      Giorno 1 di 10
-    </div>
+    <div class="day" id="dayText">
+  Giorno 1 di 10
+</div>
 
     <button id="openButton">
       APRI IL MESSAGGIO 💌
     </button>
 
-    <div class="message" id="message">
-      Il tuo primo messaggio arriverà qui 💕
-    </div>
+    <div class="message" id="message"></div>
   </main>
 
   <script>
     const button = document.getElementById("openButton");
-    const message = document.getElementById("message");
+const message = document.getElementById("message");
+const dayText = document.getElementById("dayText");
+
+const messages = [
+  `Congratulazioni!
+
+Sei il fortunato vincitore di questa sorpresa.
+
+10 messaggi per 10 giorni, una quantità discutibile di dolcezza e qualche uscita imbarazzante.
+
+Unica regola: un messaggio al giorno.`,
+
+  `Qui per ricordarti che mi manca tutto di te: le tue puzzette, i piatti lavati male, i tuoi film soporiferi...
+
+Ma soprattutto mi manca il letto perfettamente tirato, come solo tu sai fare. 😌`,
+
+  `Per te guarderei tutti i film della Marvel, ascolterei tutta la tua playlist con le canzoni senza parole e guarderei con te una corsa di F1 senza addormentarmi.
+
+Se non è amore questo. 🥰`,
+
+  `Le piante senza di te stanno morendo.
+
+Torna presto. Ci manchi. ❤️‍🩹`,
+
+  `Se fossi lì con te oggi, probabilmente ti abbraccerei fortissimo senza dire niente.
+
+Poi probabilmente ti darei fastidio mentre fai qualcosa.
+
+E poi ti abbraccerei di nuovo. 🫂`,
+
+  `Che fortuna averti incontrato.
+
+Che privilegio che, tra tante persone, tu abbia scelto me. ❤️`,
+
+  `COUPON UFFICIALE 🎟️
+
+Valido per: una raffica di bacini.
+
+Utilizzabile al nostro prossimo incontro.
+
+Con scadenza il giorno dell'arrivo.
+
+Non cumulabile con altri coupon.`,
+
+  `Tosta l'astinenza, eh? 😏🍬`,
+
+  `Ti aspetto, amore mio. ❤️`,
+
+  `Errore nella consegna del messaggio ❌
+
+Il messaggio verrà consegnato di persona. 💬`
+];
+
+function getChinaDate() {
+  const now = new Date();
+
+  return new Date(
+    now.toLocaleString("en-US", {
+      timeZone: "Asia/Shanghai"
+    })
+  );
+}
+
+function getCurrentDay() {
+  const startDate = new Date("2026-07-25T00:00:00");
+
+  const chinaDate = getChinaDate();
+
+  const difference =
+    chinaDate.getTime() - startDate.getTime();
+
+  const dayNumber =
+    Math.floor(difference / (1000 * 60 * 60 * 24)) + 1;
+
+  return Math.min(Math.max(dayNumber, 1), 10);
+}
+
+const currentDay = getCurrentDay();
+
+dayText.textContent = `Giorno ${currentDay} di 10`;
+
+button.addEventListener("click", function() {
+  message.textContent = messages[currentDay - 1];
+
+  message.classList.add("show");
+
+  button.style.display = "none";
+
+  const audioContext =
+    new (window.AudioContext || window.webkitAudioContext)();
+
+  const oscillator = audioContext.createOscillator();
+  const gainNode = audioContext.createGain();
+
+  oscillator.type = "sine";
+
+  oscillator.frequency.setValueAtTime(
+    880,
+    audioContext.currentTime
+  );
+
+  oscillator.frequency.exponentialRampToValueAtTime(
+    1320,
+    audioContext.currentTime + 0.25
+  );
+
+  gainNode.gain.setValueAtTime(
+    0.0001,
+    audioContext.currentTime
+  );
+
+  gainNode.gain.exponentialRampToValueAtTime(
+    0.12,
+    audioContext.currentTime + 0.02
+  );
+
+  gainNode.gain.exponentialRampToValueAtTime(
+    0.0001,
+    audioContext.currentTime + 0.35
+  );
+
+  oscillator.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+
+  oscillator.start();
+  oscillator.stop(audioContext.currentTime + 0.35);
+});
 
     button.addEventListener("click", function() {
       message.classList.add("show");
