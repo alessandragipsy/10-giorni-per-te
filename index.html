@@ -80,6 +80,17 @@
       font-size: 20px;
       line-height: 1.7;
       animation: appear 0.8s ease;
+      .progress {
+  margin-top: 22px;
+  font-size: 15px;
+  opacity: 0.7;
+}
+
+.tomorrow {
+  margin-top: 12px;
+  font-size: 15px;
+  opacity: 0.7;
+}
     }
 
     .message.show {
@@ -119,14 +130,24 @@
       APRI IL MESSAGGIO 💌
     </button>
 
-    <div class="message" id="message"></div>
+      <div class="message" id="message"></div>
+
+<div class="progress" id="progress"></div>
+
+<div class="tomorrow" id="tomorrow">
+  Torna domani per scoprire il prossimo messaggio 💕
+</div>
   </main>
 
   <script>
     const button = document.getElementById("openButton");
 const message = document.getElementById("message");
 const dayText = document.getElementById("dayText");
+const progress = document.getElementById("progress");
+const tomorrow = document.getElementById("tomorrow");
 
+progress.style.display = "none";
+tomorrow.style.display = "none";
 const messages = [
   `Congratulazioni!
 
@@ -208,8 +229,15 @@ dayText.textContent = `Giorno ${currentDay} di 10`;
 button.addEventListener("click", function() {
   message.textContent = messages[currentDay - 1];
 
-  message.classList.add("show");
+  message.classList.add("show"); 
+  
+progress.textContent = `Hai aperto ${dayToShow} messaggio${dayToShow === 1 ? "" : "i"} su 10 💌`;
 
+progress.style.display = "block";
+
+if (dayToShow < 10) {
+  tomorrow.style.display = "block";
+}
   button.style.display = "none";
 
   const audioContext =
