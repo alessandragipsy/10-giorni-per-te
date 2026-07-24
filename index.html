@@ -131,18 +131,33 @@
       message.classList.add("show");
       button.style.display = "none";
 
-      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
+     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
+const oscillator = audioContext.createOscillator();
+const gainNode = audioContext.createGain();
 
-      oscillator.frequency.value = 600;
-      gainNode.gain.value = 0.08;
+oscillator.type = "sine";
+oscillator.frequency.setValueAtTime(880, audioContext.currentTime);
+oscillator.frequency.exponentialRampToValueAtTime(
+  1320,
+  audioContext.currentTime + 0.25
+);
 
-      oscillator.start();
-      oscillator.stop(audioContext.currentTime + 0.15);
+gainNode.gain.setValueAtTime(0.0001, audioContext.currentTime);
+gainNode.gain.exponentialRampToValueAtTime(
+  0.12,
+  audioContext.currentTime + 0.02
+);
+gainNode.gain.exponentialRampToValueAtTime(
+  0.0001,
+  audioContext.currentTime + 0.35
+);
+
+oscillator.connect(gainNode);
+gainNode.connect(audioContext.destination);
+
+oscillator.start();
+oscillator.stop(audioContext.currentTime + 0.35) ;
     });
   </script>
 
